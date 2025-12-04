@@ -1,11 +1,3 @@
-
----
-
-## 🚀 6. GitHub Actions CI – `.github/workflows/maven-ci.yml`
-
-Create the folders `.github/workflows/` and add this file:
-
-```yaml
 name: Maven CI
 
 on:
@@ -17,8 +9,11 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: hp-printer-java
 
     steps:
       - name: Checkout repository

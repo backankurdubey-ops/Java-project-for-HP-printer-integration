@@ -1,18 +1,31 @@
 # HP Printer Java Integration
 
-This project is a Java-based integration layer for HP printers.  
-It is intended to:
+This project is a Java-based integration layer for HP printers.
 
+## Goals
+
+- Discover HP printers on the network
 - Send print jobs programmatically
-- Query printer status and metadata
-- Serve as a base for integrating HP printer SDKs or network APIs
+- Query printer status and health
+- Serve as a base for integrating HP printer SDKs or APIs
 
 ## Tech Stack
 
-- Java 17+ (recommended)
-- Maven as the build tool
+- Java 17+
+- Maven
+- JUnit 5
+- SLF4J for logging
 
-## Building
+## Project Structure
 
-```bash
-mvn clean install
+```text
+hp-printer-java/
+├── pom.xml
+├── src/
+│   ├── main/
+│   │   ├── java/com/hp/printer/PrinterService.java
+│   │   └── resources/application.properties
+│   └── test/
+│       ├── java/com/hp/printer/PrinterServiceTest.java
+│       └── resources/
+└── README.md

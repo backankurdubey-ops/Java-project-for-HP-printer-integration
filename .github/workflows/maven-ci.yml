@@ -28,8 +28,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Just to see the folder structure in logs (useful for debugging paths)
+      - name: Show repo structure
+        run: |
+          pwd
+          ls -R ..
+
       - name: Set up JDK 17
-      ...
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -41,18 +46,22 @@ jobs:
 
       # Upload the built JAR (per OS)
       - name: Upload JAR artifact
+        if: success()        # only if build passed
         uses: actions/upload-artifact@v4
         with:
           # Example artifact names:
           #   hp-printer-java-ubuntu-latest
           #   hp-printer-java-windows-latest
           name: hp-printer-java-${{ matrix.os }}
-          # Path is relative to repo root, so include the subfolder
+          # Path is relative to repo ROOT, so we include the subfolder name
           path: hp-printer-java/target/*.jar
+          if-no-files-found: error
 
       # Upload test reports (per OS)
       - name: Upload test reports
+        if: always()         # even if tests fail, try to upload reports
         uses: actions/upload-artifact@v4
         with:
           name: test-reports-${{ matrix.os }}
           path: hp-printer-java/target/surefire-reports/*
+          if-no-files-found: ignore

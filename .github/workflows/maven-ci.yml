@@ -6,11 +6,20 @@ on:
       - main
       - master
   pull_request:
+    branches:
+      - main
+      - master
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    # All `run:` commands will execute inside the Maven project directory
     defaults:
       run:
         working-directory: hp-printer-java
@@ -20,6 +29,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
+      ...
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -28,3 +38,21 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B clean verify
+
+      # Upload the built JAR (per OS)
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          # Example artifact names:
+          #   hp-printer-java-ubuntu-latest
+          #   hp-printer-java-windows-latest
+          name: hp-printer-java-${{ matrix.os }}
+          # Path is relative to repo root, so include the subfolder
+          path: hp-printer-java/target/*.jar
+
+      # Upload test reports (per OS)
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-${{ matrix.os }}
+          path: hp-printer-java/target/surefire-reports/*
